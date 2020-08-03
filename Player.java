@@ -1,12 +1,10 @@
-import java.awt.Color;
+
 import java.awt.Graphics;
 import java.io.IOException;
-import java.util.Random;
 
 public class Player extends GameObject{
 	
 	protected static int DIM;
-	private Random rnd;
 	Texture birdTexture;
 	
 	public Player(int x, int y, ID id) {
@@ -36,8 +34,7 @@ public class Player extends GameObject{
 	@Override
 	public void render(Graphics g) {
 		g.drawImage(birdTexture.get(), x, y, null);
-		//		g.setColor(Color.white);
-//		g.fillRect(x, y, DIM, DIM);
+
 	}
 	
 	public void fall()

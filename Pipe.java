@@ -1,4 +1,4 @@
-import java.awt.Color;
+
 import java.awt.Graphics;
 import java.io.IOException;
 import java.util.Random;
@@ -79,10 +79,7 @@ public class Pipe extends GameObject{
 
 		g.drawImage(topTexture.get(), x, -topTexture.get().getHeight(null) + top, null); // top pipe
 		g.drawImage(bottomTexture.get(), x, Game.HEIGHT - bottom, null);
-		
-//		g.setColor(Color.green);
-//		g.fillRect(this.x, 0, PIPE_WIDTH, top); // top pipe
-//		g.fillRect(this.x, Game.HEIGHT - bottom, PIPE_WIDTH, bottom); // bottom pipe
+
 	}
 
 }

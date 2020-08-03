@@ -16,20 +16,19 @@ public class Game extends Canvas implements Runnable{
 	// consts
 	private static final long serialVersionUID = -6112428091888191314L;
 	protected static final int WIDTH = 640, HEIGHT = WIDTH / 12 * 9;
-	protected static final int SPEED = 5;
+	//protected static final int SPEED = 5;
 	protected static final int JUMP_HEIGHT = 12;
 	protected static final int GRAV = 1;
 	protected static final int TER_VEL = 3;
 	
 	// fields
-	static Player bird = new Player(32, HEIGHT/2 - 100, ID.Player);
-	
 	private Thread thread;
 	private boolean running = false;
 	private Handler handler;
-	private Random rnd;
 	private Window window;
 	private HUD hud;
+	
+	static Player bird = new Player(32, HEIGHT/2 - 100, ID.Player);
 	protected int score = 0;
 	protected int finalScore = 0;
 	protected static int difficulty = 3;
@@ -37,14 +36,13 @@ public class Game extends Canvas implements Runnable{
 	protected boolean gameOver = false;
 	protected static boolean start = true;
 	
-	final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(); // handle pipe creation
+	ScheduledExecutorService executorService; // handle pipe creation
 	
 	
 	// Game c-tor
 	public Game()
 	{
 		handler = new Handler(this);
-		rnd = new Random();
 		hud = new HUD(this);
 		try {
 			hud.addLives(lives);
@@ -55,16 +53,20 @@ public class Game extends Canvas implements Runnable{
 		window = new Window(WIDTH, HEIGHT, "Mah first game", this);
 
 		// generate pipes every 2 seconds
+		startPipes(difficulty);
+
+	}
+	
+	public void startPipes(int difficulty)
+	{
+		executorService = Executors.newSingleThreadScheduledExecutor();
 		executorService.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				handler.pipes.add(new Pipe());
 			}
-		}, 0, difficulty, TimeUnit.SECONDS);
-		
-		//start();
+		}, 0, difficulty, TimeUnit.SECONDS);	
 	}
-	
 	
 	public synchronized void start() {
 		
@@ -86,20 +88,9 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public static void main(String[] args) {
-		while(start)
-		{
-			Game game = new Game();
-			game.start();
-			start = false;
-			while (!start)
-			{
-				System.out.print("");
-				continue;
-			}
-			
-			game.window.frame.setVisible(false);
-		
-		}
+		Game game = new Game();
+		game.start();
+
 	}
 
 	@Override
@@ -166,9 +157,7 @@ public class Game extends Canvas implements Runnable{
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			
 			handler.render(g);
-			hud.render(g);
-			
-			
+			hud.render(g);	
 		}
 		else
 		{
@@ -189,19 +178,15 @@ public class Game extends Canvas implements Runnable{
 			score -= amt;
 	}
 	
-//	public void gameOver()
-//	{
-//		BufferStrategy bs = this.getBufferStrategy();
-//		if (bs == null)
-//		{
-//			this.createBufferStrategy(3);
-//			return;
-//		}
-//		Graphics g = bs.getDrawGraphics();
-//		g.setColor(Color.cyan.darker());
-//		g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
-//		g.setColor(Color.black);
-//		g.drawString("GAME OVER", Game.WIDTH / 2, Game.HEIGHT / 2);
-//		g.drawString("Score: " + finalScore, Game.WIDTH / 2, Game.HEIGHT / 2 + 50);
-//	}
+	public void restart() throws IOException
+	{
+		gameOver = false;
+		Game.lives = 3;
+		hud.addLives(lives);
+		score = 0;
+		window.restart.setVisible(false);
+		Game.bird.setX(32);
+		Game.bird.setY(Game.HEIGHT/2 - 100);
+		startPipes(difficulty);
+	}
 }

@@ -72,7 +72,6 @@ public class Handler {
 	
 	public void gameOver()
 	{
-		Game.bird.setVelX(0);
 		while (pipes.size() > 0)
 			pipes.remove(pipes.size() - 1);
 	}

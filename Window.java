@@ -2,6 +2,7 @@ import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -33,8 +34,11 @@ public class Window extends Canvas {
 		restart.addActionListener(new ActionListener(){  
 			public void actionPerformed(ActionEvent e){  
 				{
-					Game.start = true;
-					System.out.println(Game.start);
+					try {
+						game.restart();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}  
 		});  
